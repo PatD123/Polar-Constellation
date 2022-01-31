@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "express": "^4.17.2",
-    "fetch-node": "^0.0.1"
-  }
-}
