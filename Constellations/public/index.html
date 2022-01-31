@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="1000" height="1000"></canvas>
+
+    <script>
+        const canv = document.getElementById("myCanvas");
+        const ctx = canv.getContext("2d");
+
+        if ("geolocation" in navigator) {
+            console.log("You can use geolocator!");
+            navigator.geolocation.getCurrentPosition((position) => {
+
+                // Getting longitude and latitude positions
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+
+                // Provide parameters for Fetch API
+                const c = {
+                    "latitude": lat,
+                    "longitude": long
+                };
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify(c),
+                }
+                const url = "http://127.0.0.1:3000/get_constellation";
+
+                // Fetch my api
+                fetch(url, options).then(response => {
+                    return response.json()
+                }).then(function (img) {
+                    for (let i = 0; i < img.length; i++) {
+                        for (let j = 0; j < img[0].length; j++) {
+                            r = img[i][j][0];
+                            g = img[i][j][1];
+                            b = img[i][j][2];
+                            ctx.fillStyle = "rgba(" + r + "," + g + "," + b + ", 1)";
+                            ctx.fillRect(j, i, 1, 1);
+                        }
+                    }
+                }).catch(error => console.log(error));
+            });
+        }
+        else console.log("Cannot use Geo")
+    </script>
+</body>
+
+</html>
